@@ -1,0 +1,735 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Participia — PPA & PPP wiederholen</title>
+<style>
+  :root{
+    --paper:#f3efe5;
+    --paper-deep:#e7e0d1;
+    --ink:#202522;
+    --muted:#555b54;
+    --rule:#b9b09f;
+    --oxblood:#7a2638;
+    --oxblood-dark:#551825;
+    --green:#315c4a;
+    --green-soft:#dce8df;
+    --red-soft:#f0dddd;
+    --gold:#755a24;
+    --white:#fffdf8;
+    --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    color:var(--ink);
+    background:
+      linear-gradient(rgba(60,48,35,.035) 1px, transparent 1px),
+      var(--paper);
+    background-size:100% 28px;
+    font-family:var(--sans);
+    line-height:1.55;
+  }
+  button, select, textarea{font:inherit}
+  button{cursor:pointer}
+  .shell{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:210px 1fr;min-height:100vh}
+  .rail{
+    position:sticky; top:0; height:100vh;
+    padding:38px 26px 28px 20px;
+    border-right:1px solid var(--rule);
+    background:rgba(243,239,229,.94);
+    backdrop-filter:blur(4px);
+  }
+  .brand{font-family:var(--serif);font-size:26px;letter-spacing:.08em;text-transform:uppercase;color:var(--oxblood);margin-bottom:6px}
+  .brand-sub{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:32px}
+  .nav a{display:block;color:var(--ink);text-decoration:none;padding:10px 0;border-bottom:1px solid rgba(185,176,159,.65);font-size:13px}
+  .nav a span{font-family:var(--serif);color:var(--oxblood);display:inline-block;width:32px}
+  .progress-box{margin-top:32px;padding-top:18px;border-top:2px solid var(--ink)}
+  .progress-label{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+  .progress-number{font-family:var(--serif);font-size:32px;margin:4px 0}
+  .bar{height:5px;background:var(--paper-deep);position:relative}
+  .bar > i{display:block;height:100%;width:0;background:var(--oxblood);transition:width .3s ease}
+  .reset{margin-top:14px;border:0;background:transparent;padding:0;color:var(--muted);font-size:12px;text-decoration:underline;text-underline-offset:3px}
+  main{padding:54px 58px 90px;min-width:0}
+  .hero{padding:10px 0 48px;border-bottom:3px double var(--ink);margin-bottom:56px}
+  .kicker{font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:var(--oxblood);font-weight:700}
+  h1{font-family:var(--serif);font-weight:500;font-size:clamp(44px,7vw,82px);line-height:.95;margin:12px 0 16px;letter-spacing:-.025em}
+  .hero p{max-width:690px;font-family:var(--serif);font-size:20px;margin:0;color:#393e3a}
+  .route{display:flex;flex-wrap:wrap;gap:0;margin-top:30px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .route span{padding:10px 16px 10px 0;margin-right:18px;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+  .route b{color:var(--ink);font-weight:650}
+  section{scroll-margin-top:24px;margin:0 0 74px}
+  .section-head{display:grid;grid-template-columns:76px 1fr;gap:18px;align-items:start;margin-bottom:24px}
+  .roman{font-family:var(--serif);font-size:44px;line-height:1;color:var(--oxblood);border-top:4px solid var(--oxblood);padding-top:9px}
+  h2{font-family:var(--serif);font-weight:500;font-size:34px;margin:0 0 6px}
+  .section-head p{margin:0;color:var(--muted);max-width:720px}
+  .note{
+    margin:22px 0 30px;padding:14px 18px;border-left:4px solid var(--gold);background:rgba(255,253,248,.58);font-family:var(--serif)
+  }
+  .note strong{font-family:var(--sans);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+  .items{display:grid;gap:16px}
+  .item{
+    background:rgba(255,253,248,.75);border:1px solid var(--rule);border-left:5px solid var(--ink);
+    padding:20px 22px;box-shadow:0 3px 0 rgba(51,42,30,.05)
+  }
+  .item.done{border-left-color:var(--green);background:rgba(255,253,248,.92)}
+  .item-no{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+  .latin{font-family:var(--serif);font-size:25px;letter-spacing:.01em;margin:0 0 12px}
+  .latin.small{font-size:21px}
+  .prompt{font-size:14px;color:#454a45;margin:0 0 14px}
+  .choices{display:flex;gap:8px;flex-wrap:wrap}
+  .choice, .action, .self{
+    border:1px solid var(--ink);background:var(--white);color:var(--ink);padding:9px 14px;border-radius:0;transition:.15s ease;
+  }
+  .choice:hover,.action:hover,.self:hover{background:var(--ink);color:var(--white)}
+  .choice.correct{border-color:var(--green);background:var(--green);color:white}
+  .choice.wrong{border-color:var(--oxblood);background:var(--red-soft);color:var(--oxblood-dark)}
+  .action{background:var(--oxblood);color:white;border-color:var(--oxblood);font-weight:650}
+  .action.secondary{background:transparent;color:var(--oxblood);border-color:var(--oxblood)}
+  .action.secondary:hover{background:var(--oxblood);color:white}
+  .feedback{margin-top:14px;padding:11px 13px;border-top:1px solid var(--rule);font-size:14px;display:none}
+  .feedback.show{display:block}
+  .feedback.good{color:var(--green)}
+  .feedback.bad{color:var(--oxblood-dark)}
+  .feedback strong{font-weight:700}
+  .kng-row{display:grid;grid-template-columns:minmax(130px,.6fr) 1.4fr;gap:18px;align-items:center}
+  .refword{font-family:var(--serif);font-size:28px;padding-right:18px;border-right:1px solid var(--rule)}
+  .analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  label.field{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  select, textarea{width:100%;border:1px solid var(--rule);background:#fffefa;color:var(--ink);border-radius:0;padding:10px 11px;margin-top:5px}
+  textarea{min-height:86px;resize:vertical;font-family:var(--sans);line-height:1.45}
+  .solution{display:none;margin-top:15px;border-top:1px solid var(--rule);padding-top:14px}
+  .solution.show{display:block}
+  .solution h4{font-size:11px;text-transform:uppercase;letter-spacing:.11em;color:var(--oxblood);margin:0 0 6px}
+  .solution p{margin:4px 0}
+  .analysis-help{font-family:var(--serif);background:var(--paper);padding:10px 12px;margin:8px 0 12px;border-left:3px solid var(--gold)}
+  .target-translation{font-family:var(--serif);font-size:18px}
+  .selfrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+  .self.ok{border-color:var(--green);color:var(--green)}
+  .self.retry{border-color:var(--muted);color:var(--muted)}
+  .sentence{font-family:var(--serif);font-size:25px;line-height:1.5;padding:3px 0 12px}
+  .micro{font-size:12px;color:var(--muted)}
+  .competencies{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:28px 0 0}
+  .comp{border-top:3px solid var(--rule);padding-top:8px}
+  .comp strong{display:block;font-family:var(--serif);font-size:20px}
+  .comp span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+  .ovid{
+    border:2px solid var(--ink);background:var(--white);padding:30px 32px;position:relative;margin-top:18px
+  }
+  .ovid:before{content:"OVID";position:absolute;top:-13px;left:22px;background:var(--paper);padding:0 9px;color:var(--oxblood);font-weight:800;letter-spacing:.18em;font-size:11px}
+  .ovid-lines{font-family:var(--serif);font-size:clamp(22px,3.3vw,31px);line-height:1.65;margin:0 0 18px}
+  .tok{border:0;background:transparent;font-family:inherit;font-size:inherit;padding:0 2px;color:inherit;border-bottom:2px solid transparent}
+  .tok:hover{color:var(--oxblood);border-bottom-color:var(--rule)}
+  .tok.sel{color:var(--oxblood);border-bottom-color:var(--oxblood)}
+  .tok.badsel{color:#8c6f25;border-bottom-color:#8c6f25}
+  .ovid-grid{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}
+  .ovid-grid.show{display:grid}
+  .ovid-card{border-top:1px solid var(--rule);padding-top:10px}
+  .ovid-card b{font-family:var(--serif);font-size:19px}
+  .finale{margin-top:26px;padding-top:20px;border-top:3px double var(--ink)}
+  .tag{display:inline-block;border:1px solid var(--rule);padding:4px 8px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;margin:0 5px 5px 0;background:#fffefa}
+  .footer{border-top:1px solid var(--rule);padding-top:20px;color:var(--muted);font-size:12px;margin-top:50px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+
+  /* ---------- Übersetzungs-Check ---------- */
+  .modal-backdrop{
+    position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;
+    padding:20px;background:rgba(25,24,21,.72);backdrop-filter:blur(3px)
+  }
+  .modal-backdrop.show{display:flex}
+  .modal-card{
+    width:min(560px,100%);background:var(--paper);border:1px solid var(--ink);border-top:6px solid var(--oxblood);
+    padding:26px 28px 24px;box-shadow:0 22px 60px rgba(0,0,0,.28)
+  }
+  .modal-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--oxblood);font-weight:800;margin-bottom:8px}
+  .modal-card h3{font-family:var(--serif);font-weight:500;font-size:29px;line-height:1.1;margin:0 0 12px}
+  .modal-card p{margin:0 0 13px;color:#3f443f}
+  .modal-note{font-family:var(--serif);padding:11px 13px;border-left:3px solid var(--gold);background:rgba(255,253,248,.65);margin:14px 0 18px!important}
+  .modal-actions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+
+  /* ---------- Bonusspiel ---------- */
+  .bonus-screen{
+    position:fixed;inset:0;z-index:900;display:none;overflow:auto;color:#f1e8d7;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(171,122,54,.22), transparent 38%),
+      linear-gradient(135deg,#211d19 0%,#151817 55%,#241a19 100%);
+  }
+  .bonus-screen.show{display:block}
+  .bonus-wrap{width:min(980px,100%);min-height:100dvh;margin:0 auto;padding:26px 24px 44px;display:flex;flex-direction:column}
+  .bonus-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;border-bottom:1px solid rgba(240,224,193,.22);padding-bottom:18px}
+  .bonus-eyebrow{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:#caa25d;margin-bottom:7px}
+  .bonus-title{font-family:var(--serif);font-size:clamp(34px,6vw,64px);font-weight:500;line-height:.95;margin:0}
+  .bonus-sub{font-family:var(--serif);font-style:italic;color:#c9c0b0;margin:8px 0 0;font-size:17px}
+  .bonus-exit{border:1px solid rgba(240,224,193,.28);background:transparent;color:#ddd0bc;padding:8px 11px}
+  .bonus-hud{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 16px}
+  .bonus-stat{border-top:3px solid #8c2f40;padding-top:7px}
+  .bonus-stat span{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:#a99f90}
+  .bonus-stat strong{font-family:var(--serif);font-size:25px;font-weight:500;color:#f4ead8}
+  .bonus-track{position:relative;height:60px;margin:5px 0 20px;border-bottom:2px solid rgba(224,198,151,.4)}
+  .bonus-track:before{content:"";position:absolute;left:0;right:0;bottom:13px;height:1px;background:repeating-linear-gradient(90deg,rgba(224,198,151,.35) 0 4px,transparent 4px 18px)}
+  .bonus-finish{position:absolute;right:0;bottom:17px;font-size:11px;letter-spacing:.12em;color:#caa25d;text-transform:uppercase}
+  .bonus-rider{position:absolute;left:0;bottom:4px;width:72px;transition:left .45s cubic-bezier(.2,.8,.3,1);text-align:center}
+  .bonus-rider .cart{display:inline-block;border:1px solid #caa25d;color:#e3c47c;padding:4px 8px;font-family:var(--serif);font-size:13px;letter-spacing:.08em;background:#241c18}
+  .bonus-rider .wheels{display:flex;justify-content:space-around;margin-top:2px;color:#caa25d;font-size:12px}
+  .bonus-stage{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 0 24px}
+  .bonus-card{width:min(720px,100%);background:#efe4ca;color:#241f1a;border:1px solid #b79a63;box-shadow:0 10px 0 #8c7348,0 26px 60px rgba(0,0,0,.36);padding:26px 28px 24px}
+  .bonus-round{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#765e3d}
+  .bonus-tasktype{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#8c2f40;font-weight:800;margin:6px 0 10px}
+  .bonus-prompt{font-family:var(--serif);font-size:clamp(25px,4vw,39px);line-height:1.14;margin:0 0 8px}
+  .bonus-question{font-size:14px;color:#554d42;margin-bottom:18px}
+  .bonus-answers{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+  .bonus-answer{border:1px solid #5a5145;background:#fff8e9;color:#2d2924;padding:12px 10px;min-height:48px;font-weight:650}
+  .bonus-answer:hover{background:#2d2924;color:#fff8e9}
+  .bonus-answer.correct{background:#315c4a;color:white;border-color:#315c4a}
+  .bonus-answer.wrong{background:#ead4d1;color:#702838;border-color:#8c2f40}
+  .bonus-feedback{min-height:29px;margin-top:14px;font-family:var(--serif);font-size:17px}
+  .bonus-feedback.good{color:#315c4a}.bonus-feedback.bad{color:#7a2638}
+  .bonus-intro,.bonus-complete{width:min(700px,100%);margin:auto;text-align:center;padding:52px 20px}
+  .bonus-intro h2,.bonus-complete h2{font-family:var(--serif);font-weight:500;font-size:clamp(38px,6vw,64px);margin:0 0 12px}
+  .bonus-intro p,.bonus-complete p{font-family:var(--serif);font-size:19px;color:#cabfae;max-width:610px;margin:0 auto 22px}
+  .bonus-start{border:1px solid #caa25d;background:#caa25d;color:#241c18;padding:12px 22px;font-weight:800;letter-spacing:.05em}
+  .bonus-secondary{border:1px solid rgba(240,224,193,.35);background:transparent;color:#eee1cb;padding:11px 18px;margin-left:7px}
+  .bonus-badge{display:inline-block;border:1px solid #caa25d;color:#e7c77f;padding:6px 9px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:15px}
+  .bonus-spark{animation:bonusPulse .42s ease}
+  @keyframes bonusPulse{0%{transform:scale(1)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+  @media(max-width:680px){.bonus-answers{grid-template-columns:1fr}.bonus-card{padding:22px 18px}.bonus-hud{grid-template-columns:repeat(3,1fr)}.modal-actions{justify-content:stretch}.modal-actions .action{flex:1}.bonus-secondary{margin:8px 0 0;display:block;width:100%}}
+
+  @media(max-width:860px){
+    .shell{display:block}.rail{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--rule);padding:22px 20px}.nav{display:none}.progress-box{margin-top:14px}.brand-sub{margin-bottom:10px}main{padding:36px 20px 70px}.section-head{grid-template-columns:54px 1fr}.roman{font-size:34px}.kng-row{grid-template-columns:1fr}.refword{border-right:0;border-bottom:1px solid var(--rule);padding-bottom:8px}.analysis-grid,.ovid-grid,.competencies{grid-template-columns:1fr}.hero{margin-bottom:42px}}
+  @media print{
+    .rail,.choices,.action,.selfrow,.progress-box{display:none!important}.shell{display:block}main{padding:0}.item,.ovid{break-inside:avoid;box-shadow:none}.solution{display:block!important}.feedback{display:none!important}body{background:white}.hero{padding-top:0}
+  }
+
+  .analysis-grid > *, .ovid-grid > *{min-width:0}
+  input,select,textarea{max-width:100%}
+  [hidden]{display:none!important}
+  button,select,input,textarea{font-size:16px}button{touch-action:manipulation;cursor:pointer;min-height:44px}
+  button:disabled{cursor:default;opacity:.6}button:focus-visible,a:focus-visible,summary:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #a35e16;outline-offset:4px}
+  .translation-checklist{border:1px solid var(--rule);margin:16px 0;padding:12px}
+  .translation-checklist legend{font-weight:700}.translation-checklist label{display:flex;align-items:flex-start;gap:10px;margin:10px 0;font-size:15px;text-transform:none}
+  .translation-checklist input{flex-shrink:0;width:20px;height:20px;margin-top:2px;accent-color:var(--oxblood)}
+  .modal-card{max-height:calc(100dvh - 32px);overflow:auto}.tok{min-width:44px;line-height:1.6}.ovid-card select{max-width:100%}.ovid-card label{display:block;font-size:13px;margin-top:8px}
+  .bar{overflow:hidden}.item.done .item-no:after{content:" · ✓ abgeschlossen";color:var(--green)}
+  .bonus-stat strong #bonusCorrect{display:inline;font-size:inherit;color:inherit;letter-spacing:normal}
+  .bonus-screen button:focus-visible{outline-color:#f4c66e}.bonus-card button:focus-visible{outline-color:#7a2638}
+  .bonus-stat span{color:#c8bdad}.bonus-exit{min-height:44px}.bonus-rider{transition:left .3s ease}
+  .skip-link{position:absolute;left:16px;top:-80px;background:var(--ink);color:white;padding:12px;z-index:1100}.skip-link:focus{top:12px}
+  @media(max-width:860px){.nav{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}.nav a{padding:8px 10px;font-size:13px;border:1px solid var(--rule)}.nav a span{margin-right:5px}.competencies{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){main{padding:28px 16px 54px}.item{padding:18px 14px}.ovid{padding:24px 14px}.bonus-wrap{padding:20px 16px}.bonus-top{flex-wrap:wrap}.section-head{gap:12px}h2{font-size:29px}.modal-card{padding:20px 16px}.route span{margin-right:8px;padding-right:8px}.ovid-lines{font-size:23px}}
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+  @media print{.modal-backdrop,.bonus-screen,.skip-link,#bonusUnlock{display:none!important}.nav{display:none!important}.solution:not(.show){display:none!important}}
+
+  /* Ergänzungen zur bestehenden Gestaltung */
+  .nav a{min-height:44px;display:flex;align-items:center}
+  .latin,.sentence,.refword,.bonus-prompt{overflow-wrap:anywhere}
+  .analysis-grid .field:last-child:has(textarea){grid-column:1 / -1}
+  .field input{font:inherit}
+  .reveal{margin-top:12px}
+  .solution:focus{outline:2px solid var(--gold);outline-offset:8px}
+  [aria-invalid="true"]{border:2px solid var(--oxblood)}
+  .ovid-card .micro{margin-top:12px}
+  .ovid-step{grid-column:1 / -1;margin:0}
+  .choice[aria-pressed="true"]{box-shadow:inset 0 0 0 2px currentColor}
+  .bonus-track{overflow:hidden}.bonus-answer:disabled{opacity:1}
+  .modal-card{overscroll-behavior:contain}
+  @media(hover:none){.choice:hover,.self:hover{background:var(--white);color:var(--ink)}.choice.correct:hover{background:var(--green);color:white}.choice.wrong:hover{background:var(--red-soft);color:var(--oxblood-dark)}.bonus-answer:hover{background:#fff8e9;color:#2d2924}.bonus-answer.correct:hover{background:#315c4a;color:white}.bonus-answer.wrong:hover{background:#ead4d1;color:#702838}}
+  @media(max-width:860px){.nav a{flex:1 1 120px}.nav a span{width:auto}.rail{height:auto}}
+  @media(max-height:600px) and (min-width:861px){.rail{position:relative;height:auto}}
+  @media(max-width:480px){.bonus-hud{gap:8px}.bonus-stat strong{font-size:23px}.selfrow button{width:100%;text-align:left}.tok{padding-inline:3px}.modal-actions{flex-direction:column}.modal-actions button{width:100%}}
+  @media print{.reveal,.translation-checklist{display:none!important}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#learningMain">Zum Lerninhalt</a><div class="shell">
+  <aside class="rail">
+    <div class="brand">Participia</div>
+    <div class="brand-sub">PPA · PPP · Ovid</div>
+    <nav class="nav" aria-label="Lernstufen">
+      <a href="#stufe1"><span>I</span> Erkennen</a>
+      <a href="#stufe2"><span>II</span> KNG</a>
+      <a href="#stufe3"><span>III</span> Wortgruppen</a>
+      <a href="#stufe4"><span>IV</span> Sätze</a>
+      <a href="#ovid"><span>V</span> Ovid</a>
+    </nav>
+    <div class="progress-box">
+      <div class="progress-label">Abgeschlossen</div>
+      <div class="progress-number"><span id="doneCount">0</span> / 30</div>
+      <div class="bar" role="progressbar" aria-label="Abgeschlossene Aufgaben" aria-valuemin="0" aria-valuemax="30" aria-valuenow="0"><i id="progressBar"></i></div>
+      <button class="reset" id="resetBtn">Fortschritt zurücksetzen</button>
+    </div>
+  </aside>
+
+  <main id="learningMain">
+    <header class="hero">
+      <div class="kicker">Latein · Formenlehre & Übersetzung</div>
+      <h1>PPA & PPP</h1>
+      <p>Vom Erkennen der Form zur zielsprachenorientierten Übersetzung: Partizip bestimmen, Bezugswort sichern, Zeitverhältnis verstehen, gutes Deutsch formulieren.</p>
+      <div class="route" aria-label="Arbeitsweg">
+        <span><b>1</b> Form</span><span><b>2</b> KNG</span><span><b>3</b> Bedeutung</span><span><b>4</b> Deutsch</span>
+      </div>
+      <div class="competencies">
+        <div class="comp"><strong id="c-rec">0/10</strong><span>Erkennen</span></div>
+        <div class="comp"><strong id="c-kng">0/7</strong><span>KNG</span></div>
+        <div class="comp"><strong id="c-trans">0/7</strong><span>Wortgruppen</span></div>
+        <div class="comp"><strong id="c-sent">0/6</strong><span>Satz & Ovid</span></div>
+      </div>
+    </header>
+
+    <section id="stufe1">
+      <div class="section-head"><div class="roman">I</div><div><h2>PPA, PPP — oder keines?</h2><p>Erkenne zuerst nur die Form. Noch keine KNG-Analyse, noch keine Übersetzung.</p></div></div>
+      <div class="note"><strong>Merke</strong><br>PPA: aktiv und gleichzeitig zur Handlung des Prädikats. PPP: in der Regel passiv und vorzeitig. „Gleichzeitig“ bedeutet also nicht automatisch Gegenwart. Bei <em>tempora praeterita</em> bedeutet die Perfektform „vergangen“; hier ist keine passive Übersetzung sinnvoll. Die Endungen helfen — prüfe auch den Stamm und den Zusammenhang.</div>
+      <details class="note"><summary>Wortschatzhilfe für die Formen</summary><p><em lang="la">flere</em>: weinen; <em lang="la">cadere</em>: fallen; <em lang="la">ire</em>: gehen; <em lang="la">secare</em>: schneiden (PPP-Stamm <em lang="la">sect-</em>); <em lang="la">imber, imbris m.</em>: Regen; <em lang="la">praeterire</em>: vorbeigehen, vergehen. Die Wortschatzhilfe erklärt Bedeutungen; die Form bestimmst du selbst.</p></details><div class="items" id="recognition"></div>
+    </section>
+
+    <section id="stufe2">
+      <div class="section-head"><div class="roman">II</div><div><h2>KNG-Kongruenz</h2><p>Bezugswort und Partizip müssen in Kasus, Numerus und Genus zusammenpassen. Wähle die passende Form.</p></div></div>
+      <div class="note"><strong>KNG</strong><br>Gleiche grammatische Merkmale bedeuten nicht gleiche Endungen. Ein PPA kann im Nominativ Singular für alle drei Genera gleich aussehen. Ohne Satzkontext können mehrere Kasus möglich sein. <em lang="la">poeta</em> ist trotz der Endung -a maskulin. Dat./Abl. und Nom./Akk. nennen hier die möglichen Kasus, nicht zwei verschiedene Lösungen.</div><div class="items" id="kng"></div>
+    </section>
+
+    <section id="stufe3">
+      <div class="section-head"><div class="roman">III</div><div><h2>Wortgruppen übersetzen</h2><p>Bestimme zuerst die grammatische Information. Formuliere danach eine deutsche Wiedergabe. Eine ausgangssprachenorientierte Zwischenform erscheint nur als <em>Analysehilfe</em>. Ob eine Ablativgruppe ein Ablativus absolutus ist, entscheidet der Satzkontext.</p></div></div>
+      <details class="note"><summary>Wortschatzhilfe zu den Übungen</summary><p><em>secare</em>: schneiden, zerschneiden (PPP-Stamm: <em>sect-</em>); <em>vestis, vestis f.</em>: Kleid, Kleidung; <em>imber, imbris m.</em>: Regen; <em>praeterire</em>: vorbeigehen, vergehen. Die besondere Bedeutung „vergangen“ begegnet hier bei Zeiten.</p></details><div class="items" id="pairs"></div>
+    </section>
+
+    <section id="stufe4">
+      <div class="section-head"><div class="roman">IV</div><div><h2>Im Satz</h2><p>Jetzt zählt die ganze Satzstruktur. Die Information des Partizips muss erhalten bleiben — die lateinische Konstruktion selbst muss im Deutschen nicht nachgebaut werden. Der letzte Satz steht in der Vergangenheit: Auch dort bezeichnet das PPA eine gleichzeitige Handlung.</p></div></div>
+      <div class="items" id="sentences"></div>
+    </section>
+
+    <section id="ovid">
+      <div class="section-head"><div class="roman">V</div><div><h2>Jetzt Ovid</h2><p>Markiere zunächst alle Partizipien. Ordne sie anschließend nach Bezug und Konstruktion ein und formuliere am Ende einen deutschen Text.</p></div></div>
+      <div class="ovid" id="ovidBox">
+        <div class="micro">Ovid, <em>Tristia</em> 1,3,17–18 · Abschied aus Rom</div>
+        <div class="ovid-lines" id="ovidTokens" aria-label="Ovidtext"></div>
+        <details class="note"><summary>Wortschatz und Kontext</summary><p>Ovid erzählt von seinem Abschied aus Rom. Seine Frau hält ihn fest. <em>imber, imbris m.</em>: Regen (hier Tränenregen); <em>gena, -ae f.</em>: Wange; <em>indignus, -a, -um</em>: unverdient betroffen; <em>acrius</em>: heftiger; <em>usque</em>: unablässig; <em>ipsa</em>: sie selbst. <em>per</em> mit Akkusativ: über … hin.</p></details><p class="prompt"><strong>Schritt 1:</strong> Klicke die vier Partizipien an. Klicke ein Wort erneut, um die Markierung zu lösen.</p>
+        <button class="action" id="checkOvidTokens">Partizipien prüfen</button>
+        <div class="feedback" id="ovidTokenFeedback"></div>
+        <div class="ovid-grid" id="ovidAnalysis"></div>
+        <div class="finale" id="ovidFinale" style="display:none">
+          <p class="prompt"><strong>Schritt 3:</strong> Formuliere jetzt eine zielsprachenorientierte Übersetzung im Erzähltempus der Vergangenheit. Achte darauf, dass beide weinenden Personen und die Aussage von <em>indignas</em> erhalten bleiben.</p>
+          <label for="ovidTranslation" class="field">Deine deutsche Fassung</label><textarea id="ovidTranslation" placeholder="Deine Übersetzung …"></textarea>
+          <div style="margin-top:10px"><button class="action secondary" id="revealOvid">Eigene Fassung prüfen & Muster vergleichen</button></div>
+          <div class="solution" id="ovidSolution">
+            <h4>Analysehilfe — kein Übersetzungsziel</h4>
+            <div class="analysis-help"><em>uxor amans</em> = die Frau, die liebt · <em>flentem</em> = mich, der ich weine · <em>flens</em> = die Frau weint selbst, und zwar heftiger · <em>imbre … cadente</em> = während der „Regen“ fällt (Ablativus absolutus)</div>
+            <h4>Mögliche zielsprachenorientierte Übersetzung</h4>
+            <p class="target-translation">„Meine liebende Frau hielt mich fest, während ich weinte. Sie selbst weinte noch heftiger; unablässig liefen ihr Tränen über die Wangen, die solches Leid nicht verdient hatten.“</p>
+            <p class="micro"><em>acrius</em> wird hier zu <em>flens</em> gezogen: Sie weint heftiger. <em>ipsa</em> betont die Frau selbst; der „Regen“ ist ein Bild für ihre Tränen. <em>indignas</em> nennt die Wangen unverdient vom Leid getroffen.</p><p class="micro">Die Formulierung darf anders ausfallen. Entscheidend ist, dass die Informationen der lateinischen Konstruktionen in gutem Deutsch erhalten bleiben.</p>
+            <div class="selfrow"><button class="self ok" data-ovid-self="ok">Meine Übersetzung enthält die wesentlichen Informationen</button><button class="self retry" data-ovid-self="retry">Ich überarbeite noch einmal</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="bonusUnlock" hidden class="note"><strong>Belohnung freigeschaltet</strong><p>Du hast deine Ovid-Übersetzung geprüft. Wiederhole jetzt Formen und KNG auf der Via Concordiae.</p><button class="action" id="openBonus">Zum Bonusspiel</button></div><div class="footer">Die Übungsformen orientieren sich am bereitgestellten Prima-nova-Wortschatz; einzelne für Ovid und die Vorbereitung benötigte Wörter werden erläutert. Übersetzungen prüfst du durch Selbstvergleich; sie werden nicht automatisch sprachlich bewertet. Abgeschlossen bedeutet: Formenaufgaben richtig gelöst bzw. eigene Übersetzung nach dem Vergleich selbst geprüft. Fortschritt und Eingaben werden nur lokal in diesem Browser gespeichert, sofern der Browser dies erlaubt. Ohne Speicherung bleibt die Übung nutzbar; beim Schließen gehen die Eingaben verloren.<p id="storageNotice" role="status" hidden>Dieser Browser erlaubt hier keine lokale Speicherung. Lass die Datei während der Bearbeitung geöffnet.</p></div>
+  </main>
+</div>
+
+
+<!-- Übersetzungs-Check -->
+<div class="modal-backdrop" id="translationModal" role="dialog" aria-modal="true" aria-labelledby="translationModalTitle">
+  <div class="modal-card">
+    <div class="modal-kicker">Bevor du vergleichst</div>
+    <h3 id="translationModalTitle">Hast du wirklich schon selbst übersetzt?</h3>
+    <p>Die Musterlösung hilft dir erst dann beim Lernen, wenn du vorher eine eigene Fassung versucht hast.</p>
+    <p class="modal-note" id="translationModalNote">Deine Übersetzung kann im Feld stehen oder auf Papier entstanden sein.</p>
+    <fieldset class="translation-checklist"><legend>Meine Selbstkontrolle</legend><label><input type="checkbox"> Ich habe selbst eine deutsche Fassung versucht — im Feld oder auf Papier.</label><label><input type="checkbox"> Ich habe Bezugswort, Zeitverhältnis und aktive bzw. passive Bedeutung geprüft.</label><label><input type="checkbox"> Ich habe meine Fassung auf verständliches Deutsch und die wesentlichen Informationen geprüft; Unsicherheiten kann ich benennen.</label></fieldset><div class="modal-actions">
+      <button class="action secondary" id="translationBack">Noch nicht — zurück</button>
+      <button class="action" id="translationConfirm" disabled>Ja — jetzt vergleichen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bonusspiel -->
+<div class="bonus-screen" id="bonusScreen" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="bonusTitle">
+  <div class="bonus-wrap">
+    <div class="bonus-top" id="bonusHeader">
+      <div>
+        <div class="bonus-eyebrow">Ludi participiorum</div>
+        <h2 class="bonus-title" id="bonusTitle">Via Concordiae</h2>
+        <p class="bonus-sub">Ein kurzes Bonusspiel zu Formenerkennung und KNG.</p>
+      </div>
+      <button class="bonus-exit" id="bonusExit" type="button">Zur Übung zurück</button>
+    </div>
+
+    <div class="bonus-intro" id="bonusIntro">
+      <div class="bonus-badge">Bonus freigeschaltet</div>
+      <h2>Die Übersetzung steht.</h2>
+      <p>Jetzt beginnt deine Belohnungsrunde: Erkenne PPA und PPP und finde passende KNG-Formen. Zehn richtige Antworten bringen deinen Wagen ins Ziel; Fehler brechen nur die Serie. Lies das Feedback in Ruhe und gehe dann selbst weiter. Du hast unbegrenzt Zeit.</p>
+      <button class="bonus-start" id="bonusStart">Wagen starten</button>
+    </div>
+
+    <div id="bonusGame" style="display:none">
+      <div class="bonus-hud">
+        <div class="bonus-stat"><span>Punkte</span><strong id="bonusScore">0</strong></div>
+        <div class="bonus-stat"><span>Serie</span><strong id="bonusStreak">0</strong></div>
+        <div class="bonus-stat"><span>Richtig</span><strong><span id="bonusCorrect">0</span>/10</strong></div>
+      </div>
+      <div class="bonus-track" aria-label="Spielfortschritt">
+        <div class="bonus-finish">Meta</div>
+        <div class="bonus-rider" id="bonusRider"><span class="cart">CURRUS</span><span class="wheels"><i>●</i><i>●</i></span></div>
+      </div>
+      <div class="bonus-stage">
+        <div class="bonus-card" id="bonusCard">
+          <div class="bonus-round" id="bonusRound">Frage 1</div>
+          <div class="bonus-tasktype" id="bonusTaskType">Form erkennen</div>
+          <div class="bonus-prompt" id="bonusPrompt" lang="la">amans</div>
+          <div class="bonus-question" id="bonusQuestion">PPA, PPP oder kein Partizip?</div>
+          <div class="bonus-answers" id="bonusAnswers" role="group" aria-labelledby="bonusPrompt" aria-describedby="bonusQuestion"></div>
+          <div class="bonus-feedback" id="bonusFeedback" role="status" aria-live="polite"></div><button class="bonus-answer" id="bonusNext" hidden>Weiter</button><button class="bonus-exit" id="bonusRestart" style="color:#551825;border-color:#551825;margin-top:18px">Runde neu starten</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bonus-complete" id="bonusComplete" style="display:none">
+      <div class="bonus-badge">Meta erreicht</div>
+      <h2>Currus ad metam!</h2>
+      <p id="bonusResultText">Du hast das Ziel erreicht.</p>
+      <button class="bonus-start" id="bonusAgain">Noch eine Runde</button>
+      <button class="bonus-secondary" id="bonusReturn">Zur Übung zurück</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+ recognition: [
+  {form:'uxor amans', focus:'amans', answer:'PPA', feedback:'PPA von amare. Die Form auf -ns bezeichnet eine gleichzeitig aktive Handlung.'},
+  {form:'poetam flentem', focus:'flentem', answer:'PPA', feedback:'PPA von flere. Der Stamm flent- gehört zum PPA.'},
+  {form:'imbre cadente', focus:'cadente', answer:'PPA', feedback:'PPA von cadere. cadente enthält den PPA-Stamm cadent-.'},
+  {form:'carmen scriptum', focus:'scriptum', answer:'PPP', feedback:'PPP von scribere: scribo, scripsi, scriptum.'},
+  {form:'puellam captam', focus:'captam', answer:'PPP', feedback:'PPP von capere: capio, cepi, captum.'},
+  {form:'puellis euntibus', focus:'euntibus', answer:'PPA', feedback:'PPA von ire: iens, euntis. Die Bildung ist unregelmäßig.'},
+  {form:'tempora praeterita', focus:'praeterita', answer:'PPP', feedback:'Perfektpartizip von praeterire: praetereo, praeterii, praeteritum. Hier als PPP eingeordnet; bei Zeiten bedeutet es „vergangen“, ohne passive Aussage.'},
+  {form:'vestem sectam', focus:'sectam', answer:'PPP', feedback:'sectam ist das PPP von secare (schneiden): seco, secui, sectum.'},
+  {form:'puella pulchra', focus:'pulchra', answer:'kein Partizip', feedback:'pulchra ist ein Adjektiv, kein Partizip.'},
+  {form:'uxor tenebat', focus:'tenebat', answer:'kein Partizip', feedback:'tenebat ist eine finite Verbform: 3. Person Singular Imperfekt.'}
+ ],
+ kng: [
+  {ref:'uxor', info:'Nom. Sg. f.', choices:['amans','amantem','amantis'], answer:'amans'},
+  {ref:'poetam', info:'Akk. Sg. m.', choices:['flens','flentem','flenti'], answer:'flentem'},
+  {ref:'imbre', info:'Abl. Sg. m.', choices:['cadentem','cadente','cadentes'], answer:'cadente'},
+  {ref:'puellis', info:'Dat./Abl. Pl. f.', choices:['euntibus','eunti','euntium'], answer:'euntibus'},
+  {ref:'tempora', info:'Nom./Akk. Pl. n.', choices:['praeterita','praeteritis','praeteritam'], answer:'praeterita'},
+  {ref:'vestem', info:'Akk. Sg. f.', choices:['sectam','sectum','sectis'], answer:'sectam'},
+  {ref:'carmina', info:'Nom./Akk. Pl. n.', choices:['scripta','scriptos','scriptam'], answer:'scripta'}
+ ],
+ pairs: [
+  {latin:'uxor amans', kng:'Nom. Sg. f.', kind:'PPA', analysis:'PPA · aktiv · gleichzeitig', help:'die Frau, die liebt', target:'die liebende Frau / die Frau, die liebt'},
+  {latin:'poetam flentem', kng:'Akk. Sg. m.', kind:'PPA', analysis:'PPA · aktiv · gleichzeitig', help:'den Dichter, der weint', target:'den weinenden Dichter / den Dichter, der weint'},
+  {latin:'carmina scripta', kng:'Nom./Akk. Pl. n.', kind:'PPP', analysis:'PPP · passiv · vorzeitig', help:'die Gedichte, die geschrieben worden sind', target:'die geschriebenen Gedichte'},
+  {latin:'poeta amore captus', kng:'Nom. Sg. m.', kind:'PPP', analysis:'PPP · passiv · vorzeitig', help:'der Dichter, der von Liebe ergriffen worden ist', target:'der von Liebe ergriffene Dichter'},
+  {latin:'tempora praeterita', kng:'Nom./Akk. Pl. n.', kind:'PPP', analysis:'Perfektpartizip (hier als PPP eingeordnet) · vorzeitig · Bedeutung: vergangen, ohne passive Aussage', help:'die Zeiten, die vergangen sind', target:'die vergangenen Zeiten'},
+  {latin:'vestem sectam', kng:'Akk. Sg. f.', kind:'PPP', analysis:'PPP · passiv · vorzeitig', help:'das Kleid (Akkusativ), das zerschnitten worden ist', target:'das zerschnittene Kleid'},
+  {latin:'imbre cadente', kng:'Abl. Sg. m.', kind:'PPA', analysis:'PPA · aktiv · gleichzeitig · als eigenständige Umstandsangabe im Satz: Ablativus absolutus', help:'der Regen (Ablativ), der fällt; als eigenständige Umstandsangabe: während der Regen fällt', target:'bei fallendem Regen / während es regnet — im Satz je nach Tempus auch: während es regnete'}
+ ],
+ sentences: [
+  {latin:'Poeta puellam ridentem videt.', kng:'Akk. Sg. f.', kind:'PPA', ref:'puellam', construction:'PC beim Objekt', help:'Der Dichter sieht das Mädchen, das lacht.', target:'Der Dichter sieht das lachende Mädchen. / Der Dichter sieht das Mädchen, das lacht.'},
+  {latin:'Puella carmen a poeta scriptum laudat.', kng:'Akk. Sg. n.', kind:'PPP', ref:'carmen', construction:'PC; a poeta nennt den Urheber', help:'Das Mädchen lobt das Gedicht, das vom Dichter geschrieben worden ist.', target:'Das Mädchen lobt das vom Dichter geschriebene Gedicht.'},
+  {latin:'Poeta amore captus carmen scribit.', kng:'Nom. Sg. m.', kind:'PPP', ref:'poeta', construction:'PC beim Subjekt', help:'Der Dichter, der von Liebe ergriffen worden ist, schreibt ein Gedicht.', target:'Von Liebe ergriffen schreibt der Dichter ein Gedicht.'},
+  {latin:'Puellae per urbem euntes poetam vident.', kng:'Nom. Pl. f.', kind:'PPA', ref:'puellae', construction:'PC beim Subjekt', help:'Die Mädchen, die durch die Stadt gehen, sehen den Dichter.', target:'Die Mädchen gehen durch die Stadt und sehen den Dichter. / Die durch die Stadt gehenden Mädchen sehen den Dichter.'},
+  {latin:'Lacrimis cadentibus uxor poetam tenebat.', kng:'Abl. Pl. f.', kind:'PPA', ref:'lacrimis', construction:'Ablativus absolutus', help:'Während Tränen fielen, hielt die Frau den Dichter fest.', target:'Während Tränen flossen, hielt die Frau den Dichter fest.'}
+ ]
+
+};
+
+
+const TOTAL=DATA.recognition.length+DATA.kng.length+DATA.pairs.length+DATA.sentences.length+1;
+const storageKey='participiaStateV2';
+let storageAvailable=true;
+const storage={get(){try{return localStorage.getItem(storageKey)}catch(e){storageAvailable=false;return null}},set(v){try{localStorage.setItem(storageKey,v)}catch(e){storageAvailable=false;showStorageNotice()}},clear(){try{localStorage.removeItem(storageKey)}catch(e){storageAvailable=false}}};
+let stored={};try{stored=JSON.parse(storage.get()||'{}')||{}}catch(e){stored={}}
+let state=stored.completed&&typeof stored.completed==='object'?stored.completed:{};
+let drafts=stored.drafts&&typeof stored.drafts==='object'?stored.drafts:{};
+const completionKeys=[...DATA.recognition.map((_,i)=>'r-'+i),...DATA.kng.map((_,i)=>'k-'+i),...DATA.pairs.map((_,i)=>'p-'+i),...DATA.sentences.map((_,i)=>'s-'+i),'ovid'];
+state=Object.fromEntries(completionKeys.filter(k=>state[k]===true).map(k=>[k,true]));
+function showStorageNotice(){document.getElementById('storageNotice').hidden=storageAvailable}
+function save(){storage.set(JSON.stringify({completed:state,drafts}));updateProgress()}
+function mark(key){state[key]=true;save()}
+function unmark(key,el){delete state[key];if(el)el.classList.remove('done');save()}
+function isDone(key){return state[key]===true}
+function updateProgress(){
+ const count=completionKeys.filter(isDone).length;
+ document.getElementById('doneCount').textContent=count;
+ document.getElementById('progressBar').style.width=(count/TOTAL*100)+'%';
+ document.querySelector('.bar').setAttribute('aria-valuenow',count);
+ document.querySelector('.bar').setAttribute('aria-valuetext',`${count} von ${TOTAL} Aufgaben abgeschlossen`);
+ const cnt=p=>completionKeys.filter(k=>k.startsWith(p)&&isDone(k)).length;
+ for(const [id,p,n] of [['c-rec','r-',10],['c-kng','k-',7],['c-trans','p-',7]])document.getElementById(id).textContent=cnt(p)+'/'+n;
+ document.getElementById('c-sent').textContent=(cnt('s-')+(isDone('ovid')?1:0))+'/6';
+ document.getElementById('bonusUnlock').hidden=!isDone('ovid');
+ document.getElementById('ovidBox').classList.toggle('done',isDone('ovid'));
+}
+function wireDrafts(el,key){
+ el.querySelectorAll('input,textarea,select').forEach((field,i)=>{const id=field.dataset.draft||key+':'+i;if(typeof drafts[id]==='string')field.value=drafts[id];field.addEventListener('input',()=>{drafts[id]=field.value;save()})});
+}
+function grammarFields(){return `<label class="field">Zeitverhältnis<select class="time"><option value="">bitte wählen</option><option>gleichzeitig</option><option>vorzeitig</option><option>nachzeitig</option></select></label><label class="field">Bedeutung / Genus verbi<select class="voice"><option value="">bitte wählen</option><option>aktiv</option><option>passiv</option><option>vergangen (ohne passive Aussage)</option></select></label>`}
+function checkGrammar(el,x){return el.querySelector('.time').value===(x.kind==='PPA'?'gleichzeitig':'vorzeitig')&&el.querySelector('.voice').value===(x.latin==='tempora praeterita'?'vergangen (ohne passive Aussage)':x.kind==='PPA'?'aktiv':'passiv')}
+function wireTranslation(el,key){
+ const sol=el.querySelector('.solution'),own=el.querySelector('.own');
+ sol.tabIndex=-1;
+ const reveal=document.createElement('button');reveal.className='action secondary reveal';reveal.textContent='Eigene Fassung prüfen & Muster vergleichen';reveal.hidden=true;el.querySelector('.feedback').after(reveal);
+ reveal.onclick=()=>openTranslationCheck(own,sol,reveal);
+ el.querySelector('.self.ok').onclick=()=>{el.classList.add('done');mark(key);el.querySelector('.feedback').textContent='Abgeschlossen: Du hast deine eigene Fassung mit dem Muster verglichen und geprüft.'};
+ el.querySelector('.self.retry').onclick=()=>{sol.classList.remove('show');unmark(key,el);own.focus()};
+ el.querySelectorAll('select,.refinput,.own').forEach(field=>field.addEventListener('input',()=>{
+  sol.classList.remove('show');unmark(key,el);
+  if(field!==own){reveal.hidden=true;el.querySelector('.feedback').className='feedback'}
+ }));
+ wireDrafts(el,key);return reveal;
+}
+function highlightFocus(text,focus){ return text.replace(focus, `<strong>${focus}</strong>`); }
+
+function renderRecognition(){
+ const root=document.getElementById('recognition');
+ DATA.recognition.forEach((x,i)=>{
+  const key='r-'+i;
+  const el=document.createElement('article'); el.className='item'+(isDone(key)?' done':'');
+  el.innerHTML=`<div class="item-no">${String(i+1).padStart(2,'0')} · Form erkennen</div><div class="latin">${highlightFocus(x.form,x.focus)}</div><p class="prompt">Welche Form ist <strong>${x.focus}</strong>?</p><div class="choices"></div><div class="feedback" role="status" aria-live="polite"></div>`;
+  const ch=el.querySelector('.choices'), fb=el.querySelector('.feedback');
+  ['PPA','PPP','kein Partizip'].forEach(opt=>{
+   const b=document.createElement('button');b.className='choice';b.textContent=opt;b.setAttribute('aria-pressed','false');
+   b.onclick=()=>{
+    [...ch.children].forEach(z=>{z.classList.remove('wrong','correct');z.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');drafts[key+':choice']=opt;
+    if(opt===x.answer){b.classList.add('correct');fb.className='feedback show good';fb.innerHTML=`<strong>Richtig.</strong> ${x.feedback}`;el.classList.add('done');mark(key)}
+    else{unmark(key,el);b.classList.add('wrong');fb.className='feedback show bad';fb.innerHTML=`Noch nicht. Prüfe Form und Stamm erneut: Ein PPA hat meist -ns oder -nt-, ein PPP häufig -t- oder -s-. Auch Adjektive können ähnlich enden; eine finite Verbform ist kein Partizip.`;save()}
+   }; ch.appendChild(b);if(drafts[key+':choice']===opt)b.click();
+  }); el.id=key;ch.setAttribute('role','group');ch.setAttribute('aria-label','Antwort für '+(x.form||x.ref));root.appendChild(el);
+ });
+}
+function renderKNG(){
+ const root=document.getElementById('kng');
+ DATA.kng.forEach((x,i)=>{
+  const key='k-'+i; const el=document.createElement('article');el.className='item'+(isDone(key)?' done':'');
+  el.innerHTML=`<div class="item-no">${String(i+1).padStart(2,'0')} · KNG</div><div class="kng-row"><div class="refword">${x.ref}</div><div><p class="prompt">Bezugswort: <strong>${x.info}</strong>. Welche Partizipform kongruiert?</p><div class="choices"></div><div class="feedback" role="status" aria-live="polite"></div></div></div>`;
+  const ch=el.querySelector('.choices'),fb=el.querySelector('.feedback');
+  x.choices.forEach(opt=>{const b=document.createElement('button');b.className='choice';b.textContent=opt;b.setAttribute('aria-pressed','false');b.onclick=()=>{[...ch.children].forEach(z=>{z.classList.remove('wrong','correct');z.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');drafts[key+':choice']=opt;if(opt===x.answer){b.classList.add('correct');fb.className='feedback show good';fb.innerHTML=`<strong>Richtig.</strong> ${x.ref} + ${x.answer}: ${x.info}.`;el.classList.add('done');mark(key)}else{unmark(key,el);b.classList.add('wrong');fb.className='feedback show bad';fb.textContent=`Noch einmal: ${x.ref} ist ${x.info}. Suche genau diese KNG-Form.`;save()}};ch.appendChild(b);if(drafts[key+':choice']===opt)b.click()}); el.id=key;ch.setAttribute('role','group');ch.setAttribute('aria-label','Antwort für '+(x.form||x.ref));root.appendChild(el);
+ });
+}
+function renderPairs(){
+ const root=document.getElementById('pairs');
+ DATA.pairs.forEach((x,i)=>{
+  const key='p-'+i; const el=document.createElement('article');el.className='item'+(isDone(key)?' done':'');
+  el.innerHTML=`<div class="item-no">${String(i+1).padStart(2,'0')} · Wortgruppe</div><div class="latin">${x.latin}</div><div class="analysis-grid"><label class="field">Partiziptyp<select class="kind"><option value="">bitte wählen</option><option>PPA</option><option>PPP</option></select></label>${grammarFields()}<label class="field">Deine deutsche Formulierung<textarea class="own" placeholder="Formuliere auf Deutsch …"></textarea></label></div><button class="action secondary check">Analyse prüfen</button><div class="feedback" role="status" aria-live="polite"></div><div class="solution"><h4>Grammatische Analyse</h4><p>${x.analysis}. KNG: ${x.kng}</p><h4>Analysehilfe — kein Übersetzungsziel</h4><div class="analysis-help">${x.help}</div><h4>Mögliche zielsprachenorientierte Wiedergabe</h4><p class="target-translation">${x.target}</p><div class="selfrow"><button class="self ok">Meine Formulierung passt inhaltlich</button><button class="self retry">Ich überarbeite noch einmal</button></div></div>`;
+  const sel=el.querySelector('.kind'),fb=el.querySelector('.feedback'),sol=el.querySelector('.solution');
+  const reveal=wireTranslation(el,key);
+  el.querySelector('.check').onclick=()=>{if(sel.value===x.kind&&checkGrammar(el,x)){fb.className='feedback show good';fb.innerHTML='<strong>Analyse stimmt.</strong> Übersetze zunächst selbst. Öffne dann die Selbstkontrolle.';reveal.hidden=false}else{reveal.hidden=true;sol.classList.remove('show');unmark(key,el);fb.className='feedback show bad';fb.textContent='Prüfe alle drei Angaben: PPA = gleichzeitig und aktiv; PPP = in der Regel vorzeitig und passiv. Bei vergangenen Zeiten wähle die Bedeutung ohne passive Aussage. In einer Wortgruppe bezieht sich das Zeitverhältnis auf ein noch zu ergänzendes Prädikat.'}};
+  el.id=key;root.appendChild(el);
+ });
+}
+function renderSentences(){
+ const root=document.getElementById('sentences');
+ DATA.sentences.forEach((x,i)=>{
+  const key='s-'+i; const el=document.createElement('article');el.className='item'+(isDone(key)?' done':'');
+  el.innerHTML=`<div class="item-no">${String(i+1).padStart(2,'0')} · Satz</div><div class="sentence">${x.latin}</div><div class="analysis-grid"><label class="field">Partiziptyp<select class="kind"><option value="">bitte wählen</option><option>PPA</option><option>PPP</option></select></label>${grammarFields()}<label class="field">Bezugswort<input class="refinput" type="text" placeholder="lateinisches Bezugswort" style="width:100%;border:1px solid var(--rule);background:#fffefa;padding:10px 11px;margin-top:5px"></label></div><label class="field">Deine Übersetzung<textarea class="own" placeholder="Schreibe einen deutschen Satz …"></textarea></label><div style="margin-top:10px"><button class="action secondary check">Analyse prüfen</button></div><div class="feedback" role="status" aria-live="polite"></div><div class="solution"><h4>Konstruktion</h4><p>${x.construction}. Bezugswort: <strong>${x.ref}</strong> · ${x.kng} · ${x.kind==='PPA'?'aktiv und gleichzeitig':'passiv und vorzeitig'} zum Prädikat.</p><h4>Analysehilfe — kein Übersetzungsziel</h4><div class="analysis-help">${x.help}</div><h4>Mögliche zielsprachenorientierte Übersetzung</h4><p class="target-translation">${x.target}</p><div class="selfrow"><button class="self ok">Meine Übersetzung enthält die wesentlichen Informationen</button><button class="self retry">Ich überarbeite noch einmal</button></div></div>`;
+  const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[.,;:!?]/g,'').trim(); const sel=el.querySelector('.kind'),ref=el.querySelector('.refinput'),fb=el.querySelector('.feedback'),sol=el.querySelector('.solution');
+  const reveal=wireTranslation(el,key);
+  el.querySelector('.check').onclick=()=>{const goodKind=sel.value===x.kind&&checkGrammar(el,x), goodRef=norm(ref.value)===norm(x.ref); if(goodKind&&goodRef){fb.className='feedback show good';fb.innerHTML='<strong>Analyse stimmt.</strong> Übersetze zunächst selbst. Öffne dann die Selbstkontrolle.';reveal.hidden=false}else{reveal.hidden=true;sol.classList.remove('show');unmark(key,el);fb.className='feedback show bad';fb.textContent=goodKind?'Der Partiziptyp stimmt. Prüfe jetzt die KNG-Kongruenz und damit das Bezugswort.':'Prüfe Partiziptyp, Zeitverhältnis und Genus verbi; sichere danach das Bezugswort durch KNG.'}};
+  el.id=key;root.appendChild(el);
+ });
+}
+
+const ovidWords=[
+ ['uxor',false],['amans',true],['flentem',true],['flens',true],['acrius',false],['ipsa',false],['tenebat,',false],
+ ['imbre',false],['per',false],['indignas',false],['usque',false],['cadente',true],['genas.',false]
+];
+function invalidateOvid(){
+ document.getElementById('ovidFinale').style.display='none';
+ document.getElementById('ovidSolution').classList.remove('show');
+ document.querySelectorAll('.ovid-detail').forEach(d=>d.hidden=true);
+ const f=document.getElementById('ovidAnalysisFeedback');if(f)f.className='feedback';
+ unmark('ovid',document.getElementById('ovidBox'));
+}
+function renderOvid(){
+ const root=document.getElementById('ovidTokens');
+ ovidWords.forEach(([w,isP],i)=>{
+  const b=document.createElement('button');b.className='tok';b.textContent=w+' ';b.dataset.p=isP?'1':'0';b.dataset.i=i;
+  const selected=drafts['o-token:'+i]==='yes';b.classList.toggle('sel',selected);b.setAttribute('aria-pressed',String(selected));b.setAttribute('lang','la');
+  b.onclick=()=>{b.classList.toggle('sel');b.setAttribute('aria-pressed',String(b.classList.contains('sel')));b.classList.remove('badsel');drafts['o-token:'+i]=b.classList.contains('sel')?'yes':'no';invalidateOvid();document.getElementById('ovidAnalysis').classList.remove('show');document.getElementById('ovidTokenFeedback').className='feedback';save()};
+  root.appendChild(b);if(i===6)root.appendChild(document.createElement('br'));
+ });
+ const fb=document.getElementById('ovidTokenFeedback'),analysis=document.getElementById('ovidAnalysis');
+ document.getElementById('checkOvidTokens').onclick=()=>{
+  const toks=[...root.querySelectorAll('.tok')],selected=toks.filter(t=>t.classList.contains('sel'));
+  toks.forEach(t=>t.classList.remove('badsel'));selected.filter(t=>t.dataset.p==='0').forEach(t=>t.classList.add('badsel'));
+  const correct=selected.length===4&&selected.every(t=>t.dataset.p==='1');
+  if(!correct){invalidateOvid();analysis.classList.remove('show');fb.className='feedback show bad';fb.textContent='Noch nicht vollständig. Es sind vier Partizipien; prüfe besonders die Formen mit -nt-.';return}
+  fb.className='feedback show good';fb.innerHTML='<strong>Alle vier gefunden.</strong> Bestimme nun Form, KNG, Bezug und Konstruktion.';
+  buildOvidAnalysis();analysis.classList.add('show');
+ };
+ buildOvidAnalysis();
+ const own=document.getElementById('ovidTranslation'),sol=document.getElementById('ovidSolution');sol.tabIndex=-1;
+ own.oninput=()=>{sol.classList.remove('show');unmark('ovid',document.getElementById('ovidBox'))};
+ document.getElementById('revealOvid').onclick=()=>openTranslationCheck(own,sol,document.getElementById('revealOvid'));
+ document.querySelectorAll('[data-ovid-self]').forEach(b=>b.onclick=()=>{
+  if(b.dataset.ovidSelf==='ok'){mark('ovid');document.getElementById('bonusUnlock').scrollIntoView({block:'nearest'});document.getElementById('openBonus').focus()}
+  else{sol.classList.remove('show');unmark('ovid',document.getElementById('ovidBox'));own.focus()}
+ });
+}
+function buildOvidAnalysis(){
+ const box=document.getElementById('ovidAnalysis');if(box.children.length)return;
+ const rows=[
+  {p:'amans',ref:'uxor',kng:'Nom. Sg. f.',extra:'PPA; Nom. Sg. f.; zu uxor; gleichzeitig und aktiv',syntax:'Attribut / PC'},
+  {p:'flentem',ref:'Ovid / „mich“',kng:'Akk. Sg. m.',extra:'PPA; Akk. Sg. m.; substantiviert als Objekt zu tenebat; gleichzeitig und aktiv',syntax:'substantiviertes Partizip'},
+  {p:'flens',ref:'uxor',kng:'Nom. Sg. f.',extra:'PPA; Nom. Sg. f.; PC zu uxor; gleichzeitig und aktiv',syntax:'Attribut / PC'},
+  {p:'cadente',ref:'imbre',kng:'Abl. Sg. m.',extra:'PPA; Abl. Sg. m.; Ablativus absolutus mit imbre; gleichzeitig und aktiv',syntax:'Ablativus absolutus'}
+ ];
+ const options=(values,answer,id)=>`<select data-answer="${answer}" data-draft="${id}"><option value="">bitte wählen</option>${values.map(v=>`<option>${v}</option>`).join('')}</select>`;
+ const intro=document.createElement('p');intro.className='prompt ovid-step';intro.innerHTML='<strong>Schritt 2:</strong> Bestimme die vier Partizipien. Bei einem substantivierten Partizip gibt es kein ausgedrücktes Bezugswort: Ordne die gemeinte Person zu.';box.appendChild(intro);
+ rows.forEach((x,i)=>{
+  const d=document.createElement('div');d.className='ovid-card';
+  d.innerHTML=`<b lang="la">${x.p}</b><label>Partiziptyp${options(['PPA','PPP'],'PPA','o-kind:'+i)}</label><label>KNG im Text${options(['Nom. Sg. f.','Akk. Sg. m.','Abl. Sg. m.','Akk. Pl. f.'],x.kng,'o-kng:'+i)}</label><label>Bezugswort / Bezug${options(['uxor','Ovid / „mich“','imbre'],x.ref,'o-ref:'+i)}</label><label>Konstruktion${options(['Attribut / PC','substantiviertes Partizip','Ablativus absolutus'],x.syntax,'o-syntax:'+i)}</label><div class="micro ovid-detail" hidden>${x.extra}</div>`;box.appendChild(d);
+ });
+ const wrap=document.createElement('div');wrap.className='ovid-step';wrap.innerHTML=`<p class="prompt">Welches Zeitverhältnis und welches Genus verbi haben die vier Partizipien zum Prädikat <em lang="la">tenebat</em>?</p><div class="analysis-grid">${grammarFields()}</div><button class="action" id="checkOvidAnalysis">Analyse & Zuordnung prüfen</button><div class="feedback" id="ovidAnalysisFeedback" role="status" aria-live="polite"></div>`;box.appendChild(wrap);
+ wrap.querySelector('.time').dataset.answer='gleichzeitig';wrap.querySelector('.time').dataset.draft='o-time';
+ wrap.querySelector('.voice').dataset.answer='aktiv';wrap.querySelector('.voice').dataset.draft='o-voice';
+ document.getElementById('checkOvidAnalysis').onclick=()=>{
+  const sels=[...box.querySelectorAll('select')];
+  sels.forEach(s=>s.setAttribute('aria-invalid',String(s.value!==s.dataset.answer)));
+  const errors=sels.filter(s=>s.value!==s.dataset.answer),f=document.getElementById('ovidAnalysisFeedback');
+  if(!errors.length){f.className='feedback show good';f.innerHTML='<strong>Analyse stimmt.</strong> Alle vier PPA sind aktiv und gleichzeitig zum Festhalten in der Vergangenheit. Vergleiche die KNG-Angaben und formuliere dann deine deutsche Fassung.';box.querySelectorAll('.ovid-detail').forEach(d=>d.hidden=false);document.getElementById('ovidFinale').style.display='block';document.getElementById('ovidTranslation').focus()}
+  else{invalidateOvid();f.className='feedback show bad';f.textContent=`Prüfe die ${errors.length} markierten Angaben. Achte auf KNG, Satzfunktion und die Handlung des Prädikats.`;errors[0].focus()}
+ };
+ box.querySelectorAll('select').forEach(sel=>sel.addEventListener('input',()=>{sel.removeAttribute('aria-invalid');invalidateOvid()}));
+ wireDrafts(box,'o-analysis');
+}
+
+
+/* ---------- Übersetzungs-Check ---------- */
+const translationModal=document.getElementById('translationModal');
+let translationContext=null;
+function openTranslationCheck(own,solution,trigger){
+ translationContext={own,solution,trigger};
+ translationModal.setAttribute('aria-describedby','translationModalNote');
+ const txt=own.value.trim();
+ document.getElementById('translationModalNote').textContent=txt.length<20?'Im Feld steht noch kaum Text. Auch eine eigene Fassung auf Papier zählt. Bestätige die drei Punkte erst, nachdem du sie geprüft hast.':'Deine Fassung steht im Feld. Prüfe die drei Punkte, bevor du mit dem Muster vergleichst.';
+ translationModal.querySelectorAll('input').forEach(c=>c.checked=false);
+ document.getElementById('translationConfirm').disabled=true;
+ document.querySelector('.shell').inert=true;document.body.style.overflow='hidden';translationModal.classList.add('show');
+ document.getElementById('translationBack').focus();
+}
+function closeTranslationCheck(returnToOwn=false){
+ translationModal.classList.remove('show');document.querySelector('.shell').inert=false;document.body.style.overflow='';
+ if(translationContext)(returnToOwn?translationContext.own:translationContext.trigger).focus();
+}
+translationModal.querySelectorAll('input').forEach(c=>c.addEventListener('change',()=>{document.getElementById('translationConfirm').disabled=![...translationModal.querySelectorAll('input')].every(x=>x.checked)}));
+document.getElementById('translationBack').onclick=()=>closeTranslationCheck(true);
+document.getElementById('translationConfirm').onclick=()=>{if(document.getElementById('translationConfirm').disabled)return;closeTranslationCheck();translationContext.solution.classList.add('show');translationContext.solution.focus();translationContext.solution.scrollIntoView({block:'nearest'})};
+translationModal.addEventListener('click',e=>{if(e.target===translationModal)closeTranslationCheck()});
+function trapFocus(e,container){
+ if(e.key!=='Tab')return;
+ const nodes=[...container.querySelectorAll('button:not(:disabled),a[href],input,select,textarea')].filter(x=>!x.hidden&&x.getClientRects().length);
+ const first=nodes[0],last=nodes[nodes.length-1];
+ if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+}
+document.addEventListener('keydown',e=>{
+ if(translationModal.classList.contains('show')){if(e.key==='Escape'){e.preventDefault();closeTranslationCheck();}else trapFocus(e,translationModal)}
+ else if(bonusScreen.classList.contains('show')){if(e.key==='Escape'){e.preventDefault();closeBonusScreen();}else trapFocus(e,bonusScreen)}
+});
+
+/* ---------- Bonusspiel: Via Concordiae ---------- */
+const bonusScreen=document.getElementById('bonusScreen');
+const bonusIntro=document.getElementById('bonusIntro');
+const bonusGame=document.getElementById('bonusGame');
+const bonusComplete=document.getElementById('bonusComplete');
+let bonusScore=0, bonusStreak=0, bonusCorrect=0, bonusAsked=0, bonusLocked=false, bonusDeck=[];
+
+function bonusQuestions(){
+ const rec=DATA.recognition.map(x=>({
+   type:'Form erkennen', prompt:x.form, question:`Welche Form ist ${x.focus}: PPA, PPP oder kein Partizip?`,
+   choices:['PPA','PPP','kein Partizip'], answer:x.answer,
+   feedback:x.feedback
+ }));
+ const kng=DATA.kng.map(x=>({
+   type:'KNG-Kongruenz', prompt:x.ref, question:`${x.info}: Welche Partizipform passt?`,
+   choices:x.choices.slice(), answer:x.answer,
+   feedback:`${x.ref} + ${x.answer}: ${x.info}.`
+ }));
+ return [...rec,...kng];
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function openBonusScreen(){
+ if(!isDone('ovid'))return;
+ document.querySelector('.shell').inert=true;bonusScreen.classList.add('show');bonusScreen.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
+ const target=bonusGame.style.display!=='none'?(bonusLocked?document.getElementById('bonusNext'):document.querySelector('#bonusAnswers button')):bonusComplete.style.display!=='none'?document.getElementById('bonusAgain'):document.getElementById('bonusStart');(target||document.getElementById('bonusStart')).focus();
+}
+function closeBonusScreen(){bonusScreen.classList.remove('show');bonusScreen.setAttribute('aria-hidden','true');document.body.style.overflow='';document.querySelector('.shell').inert=false;document.getElementById('openBonus').focus()}
+function makeBonusDeck(){const pool=bonusQuestions(),rec=shuffle(pool.filter(q=>q.type==='Form erkennen')),kng=shuffle(pool.filter(q=>q.type==='KNG-Kongruenz')),deck=[];for(let i=0;i<10;i++){deck.unshift(rec[i%rec.length]);deck.unshift(kng[i%kng.length])}return deck}
+function startBonus(){
+ bonusScore=0;bonusStreak=0;bonusCorrect=0;bonusAsked=0;bonusLocked=false;bonusDeck=makeBonusDeck();
+ bonusIntro.style.display='none';bonusComplete.style.display='none';bonusGame.style.display='block';
+ updateBonusHud();nextBonusQuestion();
+}
+function updateBonusHud(){
+ document.getElementById('bonusScore').textContent=bonusScore;
+ document.getElementById('bonusStreak').textContent=bonusStreak;
+ document.getElementById('bonusCorrect').textContent=bonusCorrect;
+ const pct=Math.min(100,bonusCorrect/10*100);
+ document.querySelector('.bonus-track').setAttribute('aria-label',`${bonusCorrect} von 10 richtigen Antworten`);
+ document.getElementById('bonusRider').style.left=`calc(${pct}% - ${pct*.72}px)`;
+}
+function nextBonusQuestion(){
+ if(bonusCorrect>=10){finishBonus();return}
+ if(!bonusDeck.length)bonusDeck=makeBonusDeck();
+ bonusAsked++;
+ const q=bonusDeck.pop();
+ document.getElementById('bonusRound').textContent=`Frage ${bonusAsked}`;
+ document.getElementById('bonusTaskType').textContent=q.type;
+ document.getElementById('bonusPrompt').textContent=q.prompt;
+ document.getElementById('bonusQuestion').textContent=q.question;
+ document.getElementById('bonusNext').hidden=true;
+ const fb=document.getElementById('bonusFeedback');fb.textContent='';fb.className='bonus-feedback';
+ const answers=document.getElementById('bonusAnswers');answers.innerHTML='';bonusLocked=false;
+ shuffle(q.choices.slice()).forEach(opt=>{
+  const b=document.createElement('button');b.className='bonus-answer';b.textContent=opt;
+  b.onclick=()=>answerBonus(b,opt,q);answers.appendChild(b);
+ });
+ answers.querySelector('button').focus();
+}
+function answerBonus(btn,opt,q){
+ if(bonusLocked)return;bonusLocked=true;
+ const buttons=[...document.querySelectorAll('#bonusAnswers .bonus-answer')];
+ const fb=document.getElementById('bonusFeedback');
+ if(opt===q.answer){
+   bonusStreak++;bonusCorrect++;const gain=100+Math.min(200,(bonusStreak-1)*25);bonusScore+=gain;
+   btn.classList.add('correct');fb.className='bonus-feedback good';fb.textContent=`Richtig · +${gain} Punkte. ${q.feedback}`;
+ }else{
+   bonusStreak=0;bonusDeck.unshift(q);btn.classList.add('wrong');const right=buttons.find(b=>b.textContent===q.answer);if(right)right.classList.add('correct');
+   fb.className='bonus-feedback bad';fb.textContent=`Nicht ganz. ${q.feedback}`;
+ }
+ document.getElementById('bonusCard').classList.remove('bonus-spark');void document.getElementById('bonusCard').offsetWidth;document.getElementById('bonusCard').classList.add('bonus-spark');
+ buttons.forEach(b=>b.disabled=true);updateBonusHud();document.getElementById('bonusNext').hidden=false;document.getElementById('bonusNext').textContent=bonusCorrect>=10?'Zum Ergebnis':'Nächste Frage';document.getElementById('bonusNext').focus();
+}
+function finishBonus(){
+ bonusGame.style.display='none';bonusComplete.style.display='block';document.getElementById('bonusAgain').focus();
+ const msg=bonusStreak>=4?'Starke Schlussserie. ':'';
+ document.getElementById('bonusResultText').textContent=`${msg}${bonusScore} Punkte in ${bonusAsked} Fragen. Die zehn richtigen Antworten haben deinen Wagen ins Ziel gebracht.`;
+}
+document.getElementById('openBonus').onclick=openBonusScreen;
+document.getElementById('bonusNext').onclick=nextBonusQuestion;
+document.getElementById('bonusRestart').onclick=startBonus;
+document.getElementById('bonusStart').onclick=startBonus;
+document.getElementById('bonusAgain').onclick=startBonus;
+document.getElementById('bonusExit').onclick=closeBonusScreen;
+document.getElementById('bonusReturn').onclick=closeBonusScreen;
+
+document.getElementById('resetBtn').onclick=()=>{
+ if(!confirm('Fortschritt und alle eigenen Eingaben in dieser Lernumgebung löschen?'))return;
+ state={};drafts={};storage.clear();save();
+ ['recognition','kng','pairs','sentences','ovidTokens','ovidAnalysis'].forEach(id=>document.getElementById(id).replaceChildren());
+ document.getElementById('ovidTranslation').value='';document.getElementById('ovidTokenFeedback').className='feedback';
+ invalidateOvid();renderRecognition();renderKNG();renderPairs();renderSentences();renderOvid();
+ bonusIntro.style.display='block';bonusGame.style.display='none';bonusComplete.style.display='none';bonusDeck=[];bonusScore=0;bonusStreak=0;bonusCorrect=0;bonusAsked=0;updateBonusHud();
+ setLatinLanguage();document.getElementById('resetBtn').focus();
+};
+renderRecognition();renderKNG();renderPairs();renderSentences();renderOvid();wireDrafts(document.getElementById('ovidFinale'),'o-final');updateProgress();showStorageNotice();
+function setLatinLanguage(){document.querySelectorAll('.latin,.sentence,.refword,.ovid-lines').forEach(el=>el.setAttribute('lang','la'))}
+setLatinLanguage();
+document.querySelectorAll('.feedback').forEach(el=>{el.setAttribute('role','status');el.setAttribute('aria-live','polite')});
+</script>
+</body>
+</html>
